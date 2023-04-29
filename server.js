@@ -45,9 +45,10 @@ app.get("/images", async (req, res) => {
     const bucketName = process.env.AWS_BUCKET_NAME;
 
     try {
-      const data = await s3.listObjectsV2({ Bucket: bucketName, Prefix: 'team_4' }).promise();
+      const data = await s3.listObjectsV2({ Bucket: bucketName, Prefix: 'team_4', Sort: 'descending' }).promise();
       const images = [];
-      for (let content of data.Contents) {
+      const newArray = data.Contents.sort((a, b) => new Date(b.LastModified) - new Date(a.LastModified));
+      for (let content of newArray) {
         const image = {};
         const key = content.Key;
         image.key = key;
